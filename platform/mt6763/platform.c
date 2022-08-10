@@ -73,6 +73,9 @@ int init_rpmb_sharemem();  // FIXME!!! #include <xxx>      // for init_rpmb_shar
 #include <fdt_op.h>
 #include <verified_boot_common.h>
 
+//ABM include file with init functions
+#include <droidboot_main.h>
+
 #define DEVAPC_TURN_ON 1
 
 #ifdef MTK_AB_OTA_UPDATER
@@ -801,6 +804,8 @@ void platform_init(void)
 
 	lk_vb_vfy_logo();
 
+    //ABM: init lvgl stuff
+    droidboot_init();
 	/*Show download logo & message on screen */
 	if (g_boot_arg->boot_mode == DOWNLOAD_BOOT) {
 		dprintf(CRITICAL, "[LK] boot mode is DOWNLOAD_BOOT\n");
