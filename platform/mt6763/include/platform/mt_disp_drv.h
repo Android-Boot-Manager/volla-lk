@@ -97,6 +97,8 @@ void mt_disp_draw_prog_bar(DISP_PROG_BAR_DIRECT direct,
                            UINT32 start_div, UINT32 total_div,
                            UINT32 occupied_div);
 
+void mtkfb_draw_block(unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int color);
+
 #ifdef __cplusplus
 }
 #endif

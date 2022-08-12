@@ -156,11 +156,11 @@ int mt_disp_get_dfo_setting(const char *string, unsigned int *value)
 }
 #endif
 
-static void _mtkfb_draw_block(unsigned int addr, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int color)
+void mtkfb_draw_block(unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int color)
 {
 	unsigned int i = 0;
 	unsigned int j = 0;
-	void* start_addr = (void*)addr + ALIGN_TO(CFG_DISPLAY_WIDTH, MTK_FB_ALIGNMENT)*4*y + x*4;
+	void* start_addr = (void*)fb_addr + ALIGN_TO(CFG_DISPLAY_WIDTH, MTK_FB_ALIGNMENT)*4*y + x*4;
 	unsigned int pitch = ALIGN_TO(CFG_DISPLAY_WIDTH, MTK_FB_ALIGNMENT)*4;
 	unsigned int* line_addr = start_addr;
 
@@ -183,7 +183,7 @@ static int _mtkfb_internal_test(unsigned int va, unsigned int w, unsigned int h)
 	for (i = 0; i < w * h / _internal_test_block_size / _internal_test_block_size; i++) {
 		color = (i & 0x1) * 0xff;
 		color += 0xff000000U;
-		_mtkfb_draw_block(va,
+		mtkfb_draw_block(
 				  i % (w / _internal_test_block_size) * _internal_test_block_size,
 				  i / (w / _internal_test_block_size) * _internal_test_block_size,
 				  _internal_test_block_size, _internal_test_block_size, color);

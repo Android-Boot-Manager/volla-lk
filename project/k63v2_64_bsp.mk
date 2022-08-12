@@ -1,7 +1,7 @@
 #
 LOCAL_DIR := $(GET_LOCAL_DIR)
 TARGET := k63v2_64_bsp
-DROIDBOOT_PLATFORM := yggdrasil
+DROIDBOOT_PLATFORM := yggdrasilx
 MODULES += app/mt_boot \
            app/droidboot_gui \
            dev/lcm
