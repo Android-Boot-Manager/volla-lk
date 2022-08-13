@@ -75,6 +75,7 @@ int init_rpmb_sharemem();  // FIXME!!! #include <xxx>      // for init_rpmb_shar
 
 //ABM include file with init functions
 #include <droidboot_main.h>
+#include <droidboot_boot_logo.h>
 
 #define DEVAPC_TURN_ON 1
 
@@ -765,6 +766,12 @@ void platform_init(void)
 #ifdef LK_PROFILING
 	time_boot_mode = get_timer(0);
 #endif
+    //ABM: init lvgl stuff
+    video_printf("Enter droidboot init\n");
+    mtk_wdt_disable();
+    droidboot_init();
+    mt65xx_backlight_on();
+    video_printf("Droidboot init done\n");
 #if !defined(NO_BOOT_MODE_SEL)
 	boot_mode_select();
 #endif
@@ -804,14 +811,13 @@ void platform_init(void)
 
 	lk_vb_vfy_logo();
 
-    //ABM: init lvgl stuff
-    droidboot_init();
 	/*Show download logo & message on screen */
 	if (g_boot_arg->boot_mode == DOWNLOAD_BOOT) {
 		dprintf(CRITICAL, "[LK] boot mode is DOWNLOAD_BOOT\n");
 
 #ifndef MACH_FPGA_NO_DISPLAY
-		mt_disp_show_boot_logo();
+		droidboot_show_boot_logo();
+		video_printf("Droidboot show boot logo done\n");
 #endif
 		video_printf(" => Downloading...\n");
 		dprintf(CRITICAL, "enable backlight after show bootlogo! \n");
@@ -843,7 +849,8 @@ void platform_init(void)
 #ifdef LK_PROFILING
 			time_show_logo = get_timer(0);
 #endif
-			mt_disp_show_boot_logo();
+			droidboot_show_boot_logo();
+			video_printf("Droidboot show boot logo done\n");
 #ifdef LK_PROFILING
 			dprintf(CRITICAL, "[PROFILE] ------- show logo takes %d ms -------- \n", (int)get_timer(time_show_logo));
 #endif
@@ -933,7 +940,8 @@ void platform_init(void)
 		if(g_boot_mode != META_BOOT)
 			if (g_boot_mode != ALARM_BOOT && (g_boot_mode != FASTBOOT) && !bearly_backlight_on) {
 #ifndef MACH_FPGA_NO_DISPLAY
-				mt_disp_show_boot_logo();
+				droidboot_show_boot_logo();
+				video_printf("Droidboot show boot logo done\n");
 #endif
 			}
 	}
@@ -942,7 +950,8 @@ void platform_init(void)
 	if(g_boot_mode != META_BOOT)
 		if (g_boot_mode != ALARM_BOOT && (g_boot_mode != FASTBOOT) && !bearly_backlight_on) {
 #ifndef MACH_FPGA_NO_DISPLAY
-			mt_disp_show_boot_logo();
+			droidboot_show_boot_logo();
+			video_printf("Droidboot show boot logo done\n");
 #endif
 		}
 #endif
