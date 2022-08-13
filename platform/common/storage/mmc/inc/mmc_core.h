@@ -53,7 +53,7 @@ extern "C" {
 
 
 #define CMD_RETRIES         (5)
-#define CMD_TIMEOUT         (100)           /* 100ms */
+#define CMD_TIMEOUT         (1000)           /* 1000ms */
 
 
 #if defined(FEATURE_MMC_SDIO)

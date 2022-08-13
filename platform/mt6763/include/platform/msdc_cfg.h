@@ -164,8 +164,9 @@
 
 #define FEATURE_EMCP
 
-#if defined(MMC_MSDC_DRV_CTP)
 #define FEATURE_MMC_CARD_DETECT
+
+#if defined(MMC_MSDC_DRV_CTP)
 
 /* CTP use autocmd23 */
 #define MSDC_USE_DATA_TAG         (0) /* autocmd23 with data tag */
@@ -217,7 +218,7 @@
 
 #define MSDC_TUNE_LOG           (0)
 
-#define MSDC_SLT                (0)
+#define MSDC_SLT                (1)
 #define MSDC_SLT_MASK_LOG       (1)
 #define MSDC_SLT_ANALYSIS       (0)
 #if MSDC_SLT_ANALYSIS
