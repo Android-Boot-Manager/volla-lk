@@ -39,6 +39,7 @@
 //#define MMC_MSDC_DRV_CTP
 //#define MMC_MSDC_DRV_PRELOADER
 #define MMC_MSDC_DRV_LK
+#define MMC_MSDC_SD_CARD_SUPPORT
 
 #if !defined(MMC_MSDC_DRV_CTP) && !defined(MMC_MSDC_DRV_PRELOADER) && !defined(MMC_MSDC_DRV_LK)
 #error Please define of MMC_MSDC_DRV_CTP, MMC_MSDC_DRV_PRELOADER, MMC_MSDC_DRV_LK

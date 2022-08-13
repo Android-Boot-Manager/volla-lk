@@ -38,11 +38,7 @@
 
 #include "msdc_cfg.h"
 
-#if (defined(MMC_MSDC_DRV_CTP) && !defined(FPGA_PLATFORM))
 #define MSDC_MAX_NUM            (3)
-#else
-#define MSDC_MAX_NUM            (1)
-#endif
 
 #define MSDC_CD_PIN_EN      (1 << 0)  /* card detection pin is wired   */
 #define MSDC_WP_PIN_EN      (1 << 1)  /* write protection pin is wired */

@@ -67,7 +67,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 //Note: MTKDRV_XXX are used by CTP
-#if defined(MTKDRV_PMIC) && defined(MTKDRV_PMIC_WRAP) && defined(MTKDRV_I2C)
+#if (defined(MTKDRV_PMIC) && defined(MTKDRV_PMIC_WRAP) && defined(MTKDRV_I2C)) || defined(MMC_MSDC_SD_CARD_SUPPORT)
+
 #include <upmu_hw.h>
 #else
 #define pmic_config_interface(RegNum, val, MASK, SHIFT)
@@ -180,7 +181,8 @@ static void msdc_set_gpio(u32 bits)
 }
 #endif
 
-#if defined(MMC_MSDC_DRV_CTP) && !defined(FPGA_PLATFORM)
+#if (defined(MMC_MSDC_DRV_CTP) && !defined(FPGA_PLATFORM)) || defined(MMC_MSDC_SD_CARD_SUPPORT)
+
 u32 hwPowerOn(MSDC_POWER powerId, MSDC_POWER_VOLTAGE powerVolt)
 {
 	u32 ret;
@@ -343,7 +345,7 @@ void msdc_card_power(struct mmc_host *host, u32 on)
 	//Preload and LK need not touch power since it is default on
 	MSG(CFG, "[SD%d] Turn %s card power \n", host->id, on ? "on" : "off");
 
-#if defined(MMC_MSDC_DRV_CTP)
+#if defined(MMC_MSDC_DRV_CTP) || defined(MMC_MSDC_SD_CARD_SUPPORT)
 	switch (host->id) {
 		case 0:
 			if (msdc_cap[0].power_flash == 1) {
@@ -380,7 +382,7 @@ void msdc_host_power(struct mmc_host *host, u32 on, u32 level)
 {
 	//Only CTP support power on/off for verification purose.
 	//Preload and LK need not touch power since it is default on
-#if defined(MMC_MSDC_DRV_CTP)
+#if defined(MMC_MSDC_DRV_CTP) || defined(MMC_MSDC_SD_CARD_SUPPORT)
 	u32 card_on = on;
 	if (host->id != 0) {
 		host->cur_pwr = level;

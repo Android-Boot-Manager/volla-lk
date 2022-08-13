@@ -536,7 +536,7 @@ typedef enum MSDC_POWER_VOL_TAG {
 	VOL_3600 = 3600
 } MSDC_POWER_VOLTAGE;
 
-#if defined(MMC_MSDC_DRV_CTP) && !defined(FPGA_PLATFORM)
+#if (defined(MMC_MSDC_DRV_CTP) && !defined(FPGA_PLATFORM)) || defined(MMC_MSDC_SD_CARD_SUPPORT)
 typedef enum MSDC_POWER_TAG {
 	MSDC_VMC,
 	MSDC_VMCH,
