@@ -3558,7 +3558,7 @@ int mmc_init_card(struct mmc_host *host, struct mmc_card *card)
 
 	mmc_go_idle(host);
 
-#ifdef FEATURE_MMC_SDCARD
+#if defined(FEATURE_MMC_SDCARD) || defined(MMC_MSDC_SD_CARD_SUPPORT)
 	/* send interface condition */
 	mmc_send_if_cond(host, host->ocr_avail);
 #endif
@@ -3578,7 +3578,7 @@ int mmc_init_card(struct mmc_host *host, struct mmc_card *card)
 	}
 #endif
 
-#ifdef FEATURE_MMC_SDCARD
+#if defined(FEATURE_MMC_SDCARD) || defined(MMC_MSDC_SD_CARD_SUPPORT)
 	/* query operation condition */
 	err = mmc_send_app_op_cond(host, 0, &ocr);
 	if (err != MMC_ERR_NONE) {
@@ -3589,7 +3589,7 @@ int mmc_init_card(struct mmc_host *host, struct mmc_card *card)
 			goto out;
 		}
 		mmc_card_set_mmc(card);
-#ifdef FEATURE_MMC_SDCARD
+#if defined(FEATURE_MMC_SDCARD) || defined(MMC_MSDC_SD_CARD_SUPPORT)
 	} else {
 		mmc_card_set_sd(card);
 	}
