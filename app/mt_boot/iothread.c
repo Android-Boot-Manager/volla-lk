@@ -154,14 +154,14 @@ static void do_load_images(BOOTMODE mode)
 	*/
 	if (RECOVERY_BOOT != mode) {
 		do_load_vpu(mode);
-		do_load_spm(mode);
+		//do_load_spm(mode);
 		do_load_mcupm(mode);
 	}
 	/* Actially the md img is not loaded in recovery too.
 	* Check inside this API, md power down to be decoupled
 	*/
 	do_load_scp(mode);
-	do_load_modem(mode);
+	//do_load_modem(mode);
 	do_load_adsp(mode);
 }
 

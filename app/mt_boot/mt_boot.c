@@ -1414,7 +1414,7 @@ int boot_linux_fdt(void *kernel, unsigned *tags,
 		target_fdt_firmware(fdt, sn_buf);
 
 	/* This depends on target_fdt_firmware, must after target_fdt_firmware */
-	ccci_update_md_opt_to_fdt_firmware(fdt);
+	//ccci_update_md_opt_to_fdt_firmware(fdt);
 
 	/* Return the mb before stepping into kernel */
 	mboot_free_bootimg_from_mblock();
@@ -1440,9 +1440,9 @@ int boot_linux_fdt(void *kernel, unsigned *tags,
 #endif
 #endif
 
-	ccci_create_MD_attr_dt_node(fdt);
+	//ccci_create_MD_attr_dt_node(fdt);
 
-	ret = fdt_pack(fdt);
+	//ret = fdt_pack(fdt);
 	if (ret) {
 		assert(0);
 		return FALSE;
@@ -1718,14 +1718,14 @@ int boot_linux_from_storage(void)
 	* we bypass write protection since we needs to write to proinfo. Whether device is in ATM
 	* should also be passed to kernel through cmdline, only seen in normal mode
 	*/
-	if (g_boot_mode == NORMAL_BOOT) {
+	/*if (g_boot_mode == NORMAL_BOOT) {
 		if (true == get_atm_enable_status()) {
 			cmdline_append("androidboot.atm=enable");
 		} else if (false == get_atm_enable_status()) {
 			write_protect_flow();
 			cmdline_append("androidboot.atm=disabled");
 		}
-	}
+	}*/
 
 	// MTK read printk ratelimit config
 	read_ratelimit_config();
