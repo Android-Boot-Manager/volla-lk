@@ -161,7 +161,7 @@ static void do_load_images(BOOTMODE mode)
 	* Check inside this API, md power down to be decoupled
 	*/
 	do_load_scp(mode);
-	//do_load_modem(mode);
+	do_load_modem(mode);
 	do_load_adsp(mode);
 }
 
