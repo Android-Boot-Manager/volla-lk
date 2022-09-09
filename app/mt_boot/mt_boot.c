@@ -1982,6 +1982,7 @@ void mt_boot_init(const struct app_descriptor *app)
 #endif
 
 	/* Will not return */
+	droidboot_show_dualboot_menu();
 	boot_linux_from_storage();
 
 fastboot:
