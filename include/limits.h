@@ -28,6 +28,10 @@
 #define INT32_MIN (-2147483647 - 1)
 #endif
 
+#ifndef INT32_MAX
+#define INT32_MAX 2147483647
+#endif
+
 /* UINT32 max value */
 #ifndef UINT32_MAX
 #define UINT32_MAX 0xffffffff  /* 4294967295U */
