@@ -734,7 +734,7 @@ int mboot_common_get_hall_calidata(char *buf)
 
 int boot_linux_fdt(void *kernel, unsigned *tags,
 		   unsigned machtype,
-		   void *ramdisk, unsigned ramdisk_sz)
+		   void *ramdisk, unsigned ramdisk_sz, unsigned char *kernel_raw, off_t kernel_raw_size)
 {
 	void *fdt = tags;
 	int ret;
@@ -786,10 +786,19 @@ int boot_linux_fdt(void *kernel, unsigned *tags,
 		 * LK start: 0x41E00000, Kernel Start: 0x40080000
 		 * Max is 0x41E00000 - 0x40080000 = 0x1D80000.
 		 * using 0x1C00000=28MB for decompressed kernel image size */
-		if (decompress_kernel((unsigned char *)(kernel_load_addr),
-				      (void *)kernel_target_addr, (int)zimage_size,
-				      (int)decompress_outbuf_size)) {
-			panic("decompress kernel image fail!!!\n");
+		if(kernel_raw==NULL){
+		    if (decompress_kernel((unsigned char *)(kernel_load_addr),
+				        (void *)kernel_target_addr, (int)zimage_size,
+				        (int)decompress_outbuf_size)) {
+			    panic("decompress kernel image fail!!!\n");
+		    }
+		} else {
+		    video_printf("Custom kernel found, decomressing it\n");
+	        if (decompress_kernel((unsigned char *)(kernel_raw),
+				        (void *)kernel_target_addr, (int)kernel_raw_size,
+				        (int)kernel_sz_mb)) {
+			    panic("decompress kernel image fail!!!\n");
+	        }
 		}
 	} else {
 		pal_log_info("32 bits kernel\n");
@@ -1565,12 +1574,12 @@ int boot_linux_fdt(void *kernel, unsigned *tags,
 
 void boot_linux(void *kernel, unsigned *tags,
 		unsigned machtype,
-		void *ramdisk, unsigned ramdisk_sz)
+		void *ramdisk, unsigned ramdisk_sz, unsigned char *kernel_raw, off_t kernel_raw_size)
 {
 #ifdef DEVICE_TREE_SUPPORT
 	boot_linux_fdt((void *)kernel, (unsigned *)tags,
 		       machtype,
-		       (void *)ramdisk, ramdisk_sz);
+		       (void *)ramdisk, ramdisk_sz, kernel_raw, kernel_raw_size);
 	panic("%s Fail to enter EL1\n", __func__);
 #endif
 }
@@ -1593,6 +1602,32 @@ void get_AB_OTA_name(char *part_name, int size)
 #endif /* MTK_AB_OTA_UPDATER */
 
 int boot_linux_from_storage(void)
+{
+	uint32_t kernel_target_addr = 0;
+	uint32_t ramdisk_target_addr = 0;
+	uint32_t tags_target_addr = 0;
+	uint32_t ramdisk_addr = 0;
+	uint32_t ramdisk_real_sz = 0;
+    kernel_target_addr = get_kernel_target_addr();
+	ramdisk_target_addr = get_ramdisk_target_addr();
+	ramdisk_addr = get_ramdisk_addr();
+	ramdisk_real_sz = get_ramdisk_real_sz();
+	tags_target_addr = get_tags_addr();
+
+	/* pass related root of trust info via SMC call */
+	send_root_of_trust_info();
+
+	boot_linux((void *)kernel_target_addr,
+			(unsigned *)tags_target_addr,
+		   	board_machtype(),
+			(void *)ramdisk_target_addr,
+			ramdisk_real_sz, NULL, 0);
+
+	return 0;
+}
+
+
+void mtk_pre_boot()
 {
 	int ret = 0;
 	uint32_t kernel_target_addr = 0;
@@ -1751,19 +1786,29 @@ int boot_linux_from_storage(void)
 	} else {
 		cmdline_append("androidboot.meta_log_disable=0");
 	}
-
+}
+int mtk_boot_linux_from_ram(unsigned char *kernel_raw, off_t kernel_raw_size, unsigned char *ramdisk_raw, off_t ramdisk_size){
+uint32_t kernel_target_addr = 0;
+	uint32_t ramdisk_target_addr = 0;
+	uint32_t tags_target_addr = 0;
+	uint32_t ramdisk_addr = 0;
+	uint32_t ramdisk_real_sz = 0;
+kernel_target_addr = get_kernel_target_addr();
+	ramdisk_target_addr = get_ramdisk_target_addr();
+	ramdisk_addr = get_ramdisk_addr();
+	ramdisk_real_sz = get_ramdisk_real_sz();
+	tags_target_addr = get_tags_addr();
 	/* pass related root of trust info via SMC call */
 	send_root_of_trust_info();
 
 	boot_linux((void *)kernel_target_addr,
 			(unsigned *)tags_target_addr,
 		   	board_machtype(),
-			(void *)ramdisk_target_addr,
-			ramdisk_real_sz);
+			(void *)ramdisk_raw,
+			ramdisk_size, kernel_raw, kernel_raw_size);
 
 	return 0;
 }
-
 #if defined(CONFIG_MTK_USB_UNIQUE_SERIAL) || (defined(MTK_SECURITY_SW_SUPPORT) && defined(MTK_SEC_FASTBOOT_UNLOCK_SUPPORT))
 static char udc_chr[32] = {"ABCDEFGHIJKLMNOPQRSTUVWXYZ456789"};
 
@@ -1983,6 +2028,7 @@ void mt_boot_init(const struct app_descriptor *app)
 #endif
 
 	/* Will not return */
+	mtk_pre_boot();
 	droidboot_show_dualboot_menu();
 	video_printf("Going to boot linux from storage");
 	boot_linux_from_storage();
