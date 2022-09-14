@@ -1393,7 +1393,7 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
     ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
     goto fail;
   }
-
+video_printf("[avb slot verify] going to verify vbmeta\n");
   ret = load_and_verify_vbmeta(ops,
                                requested_partitions,
                                ab_suffix,
@@ -1407,6 +1407,7 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
                                slot_data,
                                &algorithm_type,
                                additional_cmdline_subst);
+                               video_printf("[avb slot verify] vbmeta verification done\n");
   if (!allow_verification_error && ret != AVB_SLOT_VERIFY_RESULT_OK) {
     goto fail;
   }
@@ -1518,7 +1519,7 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
   if (!allow_verification_error) {
     avb_assert(ret == AVB_SLOT_VERIFY_RESULT_OK);
   }
-
+video_printf("[avb slot verify] verification done\n");
   return ret;
 
 fail:

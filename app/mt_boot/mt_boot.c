@@ -1620,9 +1620,10 @@ int boot_linux_from_storage(void)
 			 NAND_MANF_CMDLINE, nand_flash_man_code, NAND_DEV_CMDLINE, nand_flash_dev_id);
 		cmdline_append(cmdline_tmpbuf);
 #endif
+        video_printf("going to load vfy boot\n");
 		ret = load_vfy_boot(BOOTIMG_TYPE_BOOT, CFG_BOOTIMG_LOAD_ADDR);
 		PAL_ASSERT(ret >= 0);
-
+        video_printf("load vfy boot done\n");
 		PROFILING_END();
 		break;
 
@@ -1983,6 +1984,7 @@ void mt_boot_init(const struct app_descriptor *app)
 
 	/* Will not return */
 	droidboot_show_dualboot_menu();
+	video_printf("Going to boot linux from storage");
 	boot_linux_from_storage();
 
 fastboot:
