@@ -71,6 +71,6 @@ void mboot_allocate_bootimg_from_mblock(struct bootimg_hdr *p_boot_hdr);
 int bldr_load_dtb(char* boot_load_partition);
 void msg_header_error(char *img_name);
 void msg_img_error(char *img_name);
-
+int mtk_boot_linux_from_ram(unsigned char *kernel_raw, off_t kernel_raw_size, unsigned char *ramdisk_raw, off_t ramdisk_size);
 #endif  // _MT_BOOT_H_
 
